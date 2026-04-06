@@ -14,34 +14,37 @@ final class APIClient {
     
     private init() {}
     
-    func fetchMovies(completion: @escaping (Result<[MovieDTO], Error>) -> Void) {
+    func request<T: Decodable> (
+        endpoint: Endpoint,
+        completion: @escaping (Result<T, NetworkError>) -> Void
+    ) {
         
-        guard let url = Endpoint.popularMovies().url else {
+        guard let url = endpoint.url else {
+            completion(.failure(.invalidURL))
             return
         }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
-        
-            if let error = error {
-                completion(.failure(error))
+                
+            if error != nil {
+                completion(.failure(.serverError))
                 return
             }
             
             guard let data = data else {
+                completion(.failure(.noData))
                 return
             }
             
             do {
-                print(data)
-                let result = try JSONDecoder().decode(MovieResponse.self, from: data)
-                completion(.success(result.results))
+                let decoded = try JSONDecoder().decode(T.self, from: data)
+                completion(.success(decoded))
             } catch {
-                completion(.failure(error))
+                completion(.failure(.decodingError))
             }
             
-            
-            
         }.resume()
+        
     }
     
 }
