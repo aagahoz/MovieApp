@@ -9,21 +9,29 @@ import UIKit
 
 final class ViewController: UIViewController {
     
+    private let getPopularMoviesUseCase = GetPopularMoviesUseCase()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        APIClient.shared.request(
-            endpoint: .popularMovies()
-        ) { (result: Result<MovieResponse, NetworkError>) in
-                
-            switch result {
-            case .success(let response):
-                print(response.results)
-            case .failure(let error):
-                print(error)
+        fetchMovies()
+    }
+    
+    private func fetchMovies() {
+        
+        getPopularMoviesUseCase.execute { result in
+        
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movies):
+                    movies.forEach { print($0.title) }
+                case .failure(let error):
+                    print("Hata: \(error)")
+                }
             }
             
         }
+        
     }
     
 }

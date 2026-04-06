@@ -26,3 +26,16 @@ struct MovieDTO: Codable {
         case posterPath = "poster_path"
     }
 }
+
+extension MovieDTO {
+    
+    func toDomain() -> Movie {
+        return Movie(
+            id: id,
+            title: title,
+            overview: overview,
+            posterURL: posterPath
+        )
+    }
+    
+}
