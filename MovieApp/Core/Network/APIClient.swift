@@ -25,7 +25,7 @@ final class APIClient {
         }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
-                
+                print("selam")
             if error != nil {
                 completion(.failure(.serverError))
                 return
