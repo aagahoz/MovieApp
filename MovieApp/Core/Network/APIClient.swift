@@ -16,10 +16,7 @@ final class APIClient {
     
     func fetchMovies(completion: @escaping (Result<[MovieDTO], Error>) -> Void) {
         
-        let urlString = "https://api.themoviedb.org/3/movie/popular?api_key=3cc929e57d22016ba1d8cae8c4772481"
-
-        
-        guard let url = URL(string: urlString) else {
+        guard let url = Endpoint.popularMovies().url else {
             return
         }
         
