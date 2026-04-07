@@ -12,15 +12,17 @@ final class MovieListViewController: UIViewController {
     private let viewModel = MovieListViewModel()
     
     private let tableView = UITableView()
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
+    private let errorView = ErrorView()
     
     private var movies: [Movie] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         setupUI()
         bindViewModel()
-        viewModel.fetchProducts()
+        viewModel.fetchMovies()
     }
     
     private func bindViewModel() {
@@ -28,19 +30,30 @@ final class MovieListViewController: UIViewController {
         viewModel.onStateChanged = { [weak self] state in
             
             guard let self = self else { return }
-            
+                        
             DispatchQueue.main.async{
                 switch state {
                     case .loading:
+                        self.errorView.isHidden = true
                         print("Show Loading")
+                        self.activityIndicator.startAnimating()
+                    
                     case .success(let movies):
+                        self.activityIndicator.stopAnimating()
                         print(movies)
                         self.movies = movies
                         self.tableView.reloadData()
+                    
                     case .error(let error):
+                        self.activityIndicator.stopAnimating()
+                        self.errorView.isHidden = false
                         print(error)
                 }
             }
+        }
+        
+        errorView.onRetry = { [weak self] in
+            self?.viewModel.fetchMovies()
         }
         
     }
@@ -54,8 +67,14 @@ final class MovieListViewController: UIViewController {
         tableView.register(MovieCell.self, forCellReuseIdentifier: "MovieCell")
         tableView.dataSource = self
         tableView.delegate = self
-        
+                
         view.addSubview(tableView)
+        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+        
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(errorView)
         
         NSLayoutConstraint.activate([
             
@@ -64,7 +83,16 @@ final class MovieListViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            
+        ])
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            errorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            errorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
     }

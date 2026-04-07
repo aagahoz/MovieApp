@@ -19,7 +19,7 @@ final class MovieListViewModel {
         self.getPopularMoviesUseCase = getPopularMoviesUseCase
     }
     
-    func fetchProducts() {
+    func fetchMovies() {
         
         getPopularMoviesUseCase.execute { [weak self] result in
         
