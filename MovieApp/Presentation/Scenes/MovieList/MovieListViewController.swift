@@ -33,13 +33,14 @@ final class MovieListViewController: UIViewController {
         let height = scrollView.frame.size.height
         
         if offsetY > contentHeight - height * 2 {
-            footerSpinner.startAnimating()
             viewModel.loadMoreMovies()
         }
         
     }
     
+    
     private func bindViewModel() {
+            
         
         viewModel.onStateChanged = { [weak self] state in
             
@@ -143,5 +144,5 @@ extension MovieListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.configure(with: movie)
         
         return cell
-    }    
+    }
 }

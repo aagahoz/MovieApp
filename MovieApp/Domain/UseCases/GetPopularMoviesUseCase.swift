@@ -9,25 +9,16 @@ import Foundation
 
 final class GetPopularMoviesUseCase {
     
-    private let apiClient: APIClient
+    private let repository: MovieRepository
     
-    init(apiClient: APIClient = .shared) {
-        self.apiClient = apiClient
+    init(repository: MovieRepository = MovieRepositoryImpl()) {
+        self.repository = repository
     }
     
-    func execute(page: Int, completion: @escaping (Result<[Movie], NetworkError>) -> Void) {
+    func execute(page: Int,
+                 completion: @escaping (Result<[Movie], NetworkError>) -> Void) {
         
-        apiClient.request(endpoint: .popularMovies(page: page)) { (result: Result<MovieResponse, NetworkError>) in
-            
-            switch result {
-            case .success(let response):
-                let movies = response.results.map { $0.toDomain() }
-                completion(.success(movies))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-            
-        }
+        self.repository.fetchPopularMovies(page: page, completion: completion)
         
     }
     
