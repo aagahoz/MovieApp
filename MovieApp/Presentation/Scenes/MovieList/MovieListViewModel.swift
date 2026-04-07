@@ -21,6 +21,8 @@ final class MovieListViewModel {
     
     func fetchMovies() {
         
+        onStateChanged?(.loading)
+        
         getPopularMoviesUseCase.execute { [weak self] result in
         
             switch result {

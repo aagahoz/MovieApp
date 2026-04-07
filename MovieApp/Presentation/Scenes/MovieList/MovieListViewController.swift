@@ -35,12 +35,11 @@ final class MovieListViewController: UIViewController {
                 switch state {
                     case .loading:
                         self.errorView.isHidden = true
-                        print("Show Loading")
                         self.activityIndicator.startAnimating()
                     
                     case .success(let movies):
                         self.activityIndicator.stopAnimating()
-                        print(movies)
+                    self.errorView.isHidden = true
                         self.movies = movies
                         self.tableView.reloadData()
                     
@@ -74,6 +73,7 @@ final class MovieListViewController: UIViewController {
         view.addSubview(activityIndicator)
         
         errorView.translatesAutoresizingMaskIntoConstraints = false
+        errorView.isHidden = true
         view.addSubview(errorView)
         
         NSLayoutConstraint.activate([
