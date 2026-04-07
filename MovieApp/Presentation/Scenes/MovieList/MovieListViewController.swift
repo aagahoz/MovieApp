@@ -9,7 +9,16 @@ import UIKit
 
 final class MovieListViewController: UIViewController {
     
-    private let viewModel = MovieListViewModel()
+    private let viewModel: MovieListViewModel
+    
+    init(viewModel: MovieListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let tableView = UITableView()
     private let footerSpinner = UIActivityIndicatorView(style: .medium)

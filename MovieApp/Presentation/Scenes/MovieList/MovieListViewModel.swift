@@ -19,7 +19,7 @@ final class MovieListViewModel {
     
     var onStateChanged: ((MovieListViewState) -> Void)?
     
-    init(getPopularMoviesUseCase: GetPopularMoviesUseCase = GetPopularMoviesUseCase()) {
+    init(getPopularMoviesUseCase: GetPopularMoviesUseCase) {
         self.getPopularMoviesUseCase = getPopularMoviesUseCase
     }
     
@@ -54,7 +54,7 @@ final class MovieListViewModel {
                 } else {
                     self.currentPage += 1
                     self.movies.append(contentsOf: newMovies)
-                    self.onStateChanged?(.success(movies))
+                    self.onStateChanged?(.success(self.movies))
                 }
                     
             case .failure(let error):

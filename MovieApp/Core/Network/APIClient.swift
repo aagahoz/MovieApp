@@ -8,7 +8,7 @@
 import Foundation
 
 
-final class APIClient {
+final class APIClient: APIClientProtocol {
     
     static let shared = APIClient()
     

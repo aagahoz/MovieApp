@@ -11,7 +11,7 @@ final class GetPopularMoviesUseCase {
     
     private let repository: MovieRepository
     
-    init(repository: MovieRepository = MovieRepositoryImpl()) {
+    init(repository: MovieRepository) {
         self.repository = repository
     }
     

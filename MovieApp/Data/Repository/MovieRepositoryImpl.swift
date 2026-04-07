@@ -9,9 +9,9 @@ import Foundation
 
 final class MovieRepositoryImpl: MovieRepository {
     
-    private let apiClient: APIClient
+    private let apiClient: APIClientProtocol
     
-    init(apiClient: APIClient = .shared) {
+    init(apiClient: APIClientProtocol = APIClient.shared) {
         self.apiClient = apiClient
     }
     
