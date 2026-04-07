@@ -24,12 +24,13 @@ struct Endpoint {
 
 extension Endpoint {
     
-    static func popularMovies() -> Endpoint {
+    static func popularMovies(page: Int) -> Endpoint {
         return Endpoint(
             
             path: "/3/movie/popular",
             queryItems: [
-                URLQueryItem(name: "api_key", value: "3cc929e57d22016ba1d8cae8c4772481")
+                URLQueryItem(name: "api_key", value: "3cc929e57d22016ba1d8cae8c4772481"),
+                URLQueryItem(name: "page", value: "\(page)")
             ]
             
         )

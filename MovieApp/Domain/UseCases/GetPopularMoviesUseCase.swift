@@ -15,9 +15,9 @@ final class GetPopularMoviesUseCase {
         self.apiClient = apiClient
     }
     
-    func execute(completion: @escaping (Result<[Movie], NetworkError>) -> Void) {
+    func execute(page: Int, completion: @escaping (Result<[Movie], NetworkError>) -> Void) {
         
-        apiClient.request(endpoint: .popularMovies()) { (result: Result<MovieResponse, NetworkError>) in
+        apiClient.request(endpoint: .popularMovies(page: page)) { (result: Result<MovieResponse, NetworkError>) in
             
             switch result {
             case .success(let response):

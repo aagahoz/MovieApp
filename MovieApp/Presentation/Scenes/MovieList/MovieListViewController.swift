@@ -25,6 +25,18 @@ final class MovieListViewController: UIViewController {
         viewModel.fetchMovies()
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - height * 2 {
+            viewModel.loadMoreMovies()
+        }
+        
+    }
+    
     private func bindViewModel() {
         
         viewModel.onStateChanged = { [weak self] state in
