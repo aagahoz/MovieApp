@@ -12,6 +12,7 @@ final class MovieListViewController: UIViewController {
     private let viewModel = MovieListViewModel()
     
     private let tableView = UITableView()
+    private let footerSpinner = UIActivityIndicatorView(style: .medium)
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     private let errorView = ErrorView()
     
@@ -32,6 +33,7 @@ final class MovieListViewController: UIViewController {
         let height = scrollView.frame.size.height
         
         if offsetY > contentHeight - height * 2 {
+            footerSpinner.startAnimating()
             viewModel.loadMoreMovies()
         }
         
@@ -51,12 +53,15 @@ final class MovieListViewController: UIViewController {
                     
                     case .success(let movies):
                         self.activityIndicator.stopAnimating()
-                    self.errorView.isHidden = true
+                        self.footerSpinner.stopAnimating()
+                        self.errorView.isHidden = true
+                    
                         self.movies = movies
                         self.tableView.reloadData()
                     
                     case .error(let error):
                         self.activityIndicator.stopAnimating()
+                        self.footerSpinner.stopAnimating()
                         self.errorView.isHidden = false
                         print(error)
                 }
@@ -80,6 +85,11 @@ final class MovieListViewController: UIViewController {
         tableView.delegate = self
                 
         view.addSubview(tableView)
+        
+        footerSpinner.frame = CGRect(x: 0, y: 0, width: 0, height: 44)
+        footerSpinner.hidesWhenStopped = true
+        
+        tableView.tableFooterView = footerSpinner
         
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(activityIndicator)
