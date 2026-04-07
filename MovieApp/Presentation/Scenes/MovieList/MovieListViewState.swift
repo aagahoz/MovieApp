@@ -10,6 +10,7 @@ import Foundation
 
 enum MovieListViewState {
     case loading
+    case paginationLoading
     case success([Movie])
     case error(String)
 }

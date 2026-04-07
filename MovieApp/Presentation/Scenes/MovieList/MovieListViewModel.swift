@@ -28,13 +28,18 @@ final class MovieListViewModel {
         movies = []
         hasMoreData = true
         
-        onStateChanged?(.loading)
         loadMoreMovies()
     }
     
     func loadMoreMovies() {
         
         guard !isLoading, hasMoreData else { return }
+        
+        if currentPage == 1 {
+            onStateChanged?(.loading)
+        } else {
+            onStateChanged?(.paginationLoading)
+        }
         
         isLoading = true
         

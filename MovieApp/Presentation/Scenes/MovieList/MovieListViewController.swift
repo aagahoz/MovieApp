@@ -48,8 +48,14 @@ final class MovieListViewController: UIViewController {
             DispatchQueue.main.async{
                 switch state {
                     case .loading:
-                        self.errorView.isHidden = true
                         self.activityIndicator.startAnimating()
+                        self.footerSpinner.stopAnimating()
+                        self.errorView.isHidden = true
+                    
+                case .paginationLoading:
+                        self.activityIndicator.stopAnimating()
+                        self.footerSpinner.startAnimating()
+                        
                     
                     case .success(let movies):
                         self.activityIndicator.stopAnimating()
