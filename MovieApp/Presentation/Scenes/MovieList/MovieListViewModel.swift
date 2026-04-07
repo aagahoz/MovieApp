@@ -13,8 +13,9 @@ final class MovieListViewModel {
     
     var movies: [Movie] = []
     
-    var onMoviesUpdated: (() -> Void)?
-    var onError: ((String) -> Void)?
+//    var onMoviesUpdated: (() -> Void)?
+//    var onError: ((String) -> Void)?
+    var onStateChanged: ((MovieListViewState) -> Void)?
     
     init(getPopularMoviesUseCase: GetPopularMoviesUseCase = GetPopularMoviesUseCase()) {
         self.getPopularMoviesUseCase = getPopularMoviesUseCase
@@ -27,9 +28,11 @@ final class MovieListViewModel {
             switch result {
             case .success(let movies):
                 self?.movies = movies
-                self?.onMoviesUpdated?()
+                self?.onStateChanged?(.success(movies))
+//                self?.onMoviesUpdated?()
             case .failure(let error):
-                self?.onError?("Something went wrong")
+                self?.onStateChanged?(.error("Something went wrong"))
+//                self?.onError?("Something went wrong")
             }
             
         }
