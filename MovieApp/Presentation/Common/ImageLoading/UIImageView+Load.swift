@@ -1,0 +1,72 @@
+//
+//  UIImageView+Load.swift
+//  MovieApp
+//
+//  Created by Agah on 8.04.2026.
+//
+
+import UIKit
+
+private var imageTaskKey: UInt8 = 0
+
+extension UIImageView {
+    
+    
+    private var imageTask: URLSessionDataTask? {
+        
+        get {
+            objc_getAssociatedObject(self, &imageTaskKey) as? URLSessionDataTask
+        }
+        
+        set {
+            objc_setAssociatedObject(self, &imageTaskKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+    func setImage(with urlString: String?) {
+        
+        imageTask?.cancel()
+        print(urlString)
+
+        image = nil
+        
+        guard let urlString = urlString,
+              let url = URL(string: "https://image.tmdb.org/t/p/w500\(urlString)") else {
+            return
+        }
+        
+        print("gurd gecildi")
+        
+        if let cached = ImageCache.shared.get(forkey: url.absoluteString) {
+            self.image = cached
+            print("cached image")
+            return
+        }
+        
+        print("cached gecildi")
+        
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            
+            print("downloading image")
+            
+            guard let data = data,
+                  let image = UIImage(data: data) else { return }
+                
+            ImageCache.shared.set(image, forkey: url.absoluteString)
+            
+            DispatchQueue.main.async {
+                
+                self?.image = image
+                
+            }
+            
+        }
+        
+        imageTask = task
+        task.resume()
+        
+    }
+    
+    
+}
+

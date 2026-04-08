@@ -11,6 +11,7 @@ final class MovieCell: UITableViewCell {
     
     private let titleLabel = UILabel()
     private let overviewLabel = UILabel()
+    private let posterImageView = UIImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -22,6 +23,12 @@ final class MovieCell: UITableViewCell {
     }
     
     private func setupUI() {
+        
+        posterImageView.translatesAutoresizingMaskIntoConstraints = false
+        posterImageView.contentMode = .scaleAspectFill
+        posterImageView.clipsToBounds = true
+
+        contentView.addSubview(posterImageView)
         
         titleLabel.font = .boldSystemFont(ofSize: 16)
         overviewLabel.font = .systemFont(ofSize: 12)
@@ -35,19 +42,27 @@ final class MovieCell: UITableViewCell {
         contentView.addSubview(stack)
         
         NSLayoutConstraint.activate([
+            posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            posterImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            posterImageView.widthAnchor.constraint(equalToConstant: 60),
+            posterImageView.heightAnchor.constraint(equalToConstant: 90)
+        ])
+        
+        NSLayoutConstraint.activate([
             
             stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stack.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 12),
             stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             stack.bottomAnchor.constraint(equalTo:  contentView.bottomAnchor, constant: -8)
             
         ])
-        
+  
     }
     
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
         overviewLabel.text = movie.overview
+        posterImageView.setImage(with: movie.posterURL)
     }
     
 }
