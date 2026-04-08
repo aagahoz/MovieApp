@@ -80,6 +80,8 @@ final class MovieListViewModel {
         case .success(let newMovies):
             if newMovies.isEmpty {
                 hasMoreData = false
+                onStateChanged?(.success(self.movies))
+                
             } else {
                 currentPage += 1
                 self.movies.append(contentsOf: newMovies)
@@ -108,6 +110,8 @@ final class MovieListViewModel {
         currentPage = 1
         movies = []
         hasMoreData = true
+        
+        onStateChanged?(.loading)
         
         loadMoreMovies()
     }

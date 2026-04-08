@@ -25,6 +25,7 @@ final class MovieListViewController: UIViewController {
     private let footerSpinner = UIActivityIndicatorView(style: .medium)
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     private let errorView = ErrorView()
+    private let emptyView = EmptyView()
     
     private var movies: [Movie] = []
     private var searchWorkItem: DispatchWorkItem?
@@ -62,12 +63,15 @@ final class MovieListViewController: UIViewController {
                     case .loading:
                         self.activityIndicator.startAnimating()
                         self.footerSpinner.stopAnimating()
+                    
+                        self.movies = []
+                        self.tableView.reloadData()
+                    
                         self.errorView.isHidden = true
                     
-                case .paginationLoading:
-                        self.activityIndicator.stopAnimating()
-                        self.footerSpinner.startAnimating()
-                        
+                    case .paginationLoading:
+                            self.activityIndicator.stopAnimating()
+                            self.footerSpinner.startAnimating()
                     
                     case .success(let movies):
                         self.activityIndicator.stopAnimating()
@@ -76,6 +80,7 @@ final class MovieListViewController: UIViewController {
                     
                         self.movies = movies
                         self.tableView.reloadData()
+                        self.emptyView.isHidden = !movies.isEmpty
                     
                     case .error(let error):
                         self.activityIndicator.stopAnimating()
@@ -119,6 +124,10 @@ final class MovieListViewController: UIViewController {
         errorView.isHidden = true
         view.addSubview(errorView)
         
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        emptyView.isHidden = true
+        view.addSubview(emptyView)
+        
         NSLayoutConstraint.activate([
             
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -136,6 +145,11 @@ final class MovieListViewController: UIViewController {
         NSLayoutConstraint.activate([
             errorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             errorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
     }
