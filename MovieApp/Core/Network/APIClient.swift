@@ -17,14 +17,14 @@ final class APIClient: APIClientProtocol {
     func request<T: Decodable> (
         endpoint: Endpoint,
         completion: @escaping (Result<T, NetworkError>) -> Void
-    ) {
+    ) -> URLSessionDataTask? {
         
         guard let url = endpoint.url else {
             completion(.failure(.invalidURL))
-            return
+            return nil
         }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
 
             if error != nil {
                 completion(.failure(.serverError))
@@ -43,8 +43,10 @@ final class APIClient: APIClientProtocol {
                 completion(.failure(.decodingError))
             }
             
-        }.resume()
+        }
+        task.resume()
         
+        return task
     }
     
 }

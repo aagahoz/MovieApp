@@ -27,6 +27,7 @@ final class MovieListViewModel {
     private var hasMoreData = true
     
     private var currentQuery: String?
+    private var currentTask: URLSessionDataTask?
     
     var onStateChanged: ((MovieListViewState) -> Void)?
     
@@ -60,23 +61,15 @@ final class MovieListViewModel {
         switch mode {
             case .popular:
                 getPopularMoviesUseCase.execute(page: currentPage) { [weak self] result in
-                    
                     self?.handleResult(result)
                 }
                 
             case .search(let query):
                 
-                let requestQuery = query
+                currentTask?.cancel()
             
-                searchMoviesUseCase.execute(query: requestQuery, page: currentPage) { [weak self] result in
-                    
-                    guard let self = self else { return }
-                    
-                    if self.currentQuery != requestQuery {
-                        return
-                    }
-                    
-                    self.handleResult(result)
+                currentTask = searchMoviesUseCase.execute(query: query, page: currentPage) { [weak self] result in
+                    self?.handleResult(result)
                 }
             }
     }

@@ -17,7 +17,7 @@ final class MovieRepositoryImpl: MovieRepository {
     
     
     func fetchPopularMovies(page: Int,
-                            completion: @escaping (Result<[Movie], NetworkError>) -> Void) {
+                            completion: @escaping (Result<[Movie], NetworkError>) -> Void) -> URLSessionDataTask? {
         
         apiClient.request(endpoint: .popularMovies(page: page)) { (result: Result<MovieResponse, NetworkError>) in
             
@@ -34,9 +34,9 @@ final class MovieRepositoryImpl: MovieRepository {
         
     }
     
-    func searchMovies(query: String, page: Int, completion: @escaping (Result<[Movie], NetworkError>) -> Void) {
+    func searchMovies(query: String, page: Int, completion: @escaping (Result<[Movie], NetworkError>) -> Void) -> URLSessionDataTask? {
         
-        apiClient.request(endpoint: .searchMovies(query: query, page: page)) { ( result: Result<MovieResponse, NetworkError>) in
+        return apiClient.request(endpoint: .searchMovies(query: query, page: page)) { ( result: Result<MovieResponse, NetworkError>) in
             
             switch result {
             case .success(let response):

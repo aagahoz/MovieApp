@@ -12,6 +12,6 @@ protocol APIClientProtocol {
     func request<T: Decodable>(
             endpoint: Endpoint,
             completion: @escaping (Result<T, NetworkError>) -> Void
-        )
+        ) -> URLSessionDataTask?
     
 }

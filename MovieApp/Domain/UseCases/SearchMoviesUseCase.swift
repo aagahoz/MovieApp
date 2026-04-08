@@ -15,9 +15,9 @@ final class SearchMoviesUseCase {
         self.repository = repository
     }
     
-    func execute(query: String, page: Int, completion: @escaping (Result<[Movie], NetworkError>) -> Void) {
+    func execute(query: String, page: Int, completion: @escaping (Result<[Movie], NetworkError>) -> Void) -> URLSessionDataTask? {
         
-        repository.searchMovies(query: query, page: page, completion: completion)
+        return repository.searchMovies(query: query, page: page, completion: completion)
         
     }
     
