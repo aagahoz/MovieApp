@@ -26,6 +26,8 @@ final class MovieListViewModel {
     private var isLoading = false
     private var hasMoreData = true
     
+    private var currentQuery: String?
+    
     var onStateChanged: ((MovieListViewState) -> Void)?
     
     init(getPopularMoviesUseCase: GetPopularMoviesUseCase,
@@ -54,28 +56,7 @@ final class MovieListViewModel {
         }
         
         isLoading = true
-        
-//        getPopularMoviesUseCase.execute(page: currentPage) { [weak self] result in
-//            
-//            guard let self = self else { return }
-//            
-//            switch result {
-//            case .success(let newMovies):
-//                if newMovies.isEmpty {
-//                    hasMoreData = false
-//                } else {
-//                    self.currentPage += 1
-//                    self.movies.append(contentsOf: newMovies)
-//                    self.onStateChanged?(.success(self.movies))
-//                }
-//                    
-//            case .failure(let error):
-//                self.onStateChanged?(.error("Something went wrong"))
-//            }
-//            
-//            self.isLoading = false
-//        }
-        
+
         switch mode {
             case .popular:
                 getPopularMoviesUseCase.execute(page: currentPage) { [weak self] result in
@@ -84,9 +65,18 @@ final class MovieListViewModel {
                 }
                 
             case .search(let query):
-                searchMoviesUseCase.execute(query: query, page: currentPage) { [weak self] result in
+                
+                let requestQuery = query
+            
+                searchMoviesUseCase.execute(query: requestQuery, page: currentPage) { [weak self] result in
                     
-                    self?.handleResult(result)
+                    guard let self = self else { return }
+                    
+                    if self.currentQuery != requestQuery {
+                        return
+                    }
+                    
+                    self.handleResult(result)
                 }
             }
     }
@@ -114,11 +104,13 @@ final class MovieListViewModel {
         
         if query.isEmpty {
             mode = .popular
+            currentQuery = nil
             fetchMovies()
             return
         }
         
         mode = .search(query: query)
+        currentQuery = query
         
         currentPage = 1
         movies = []
