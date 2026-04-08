@@ -26,8 +26,6 @@ extension UIImageView {
     func setImage(with urlString: String?) {
         
         imageTask?.cancel()
-        print(urlString)
-
         image = nil
         
         guard let urlString = urlString,
@@ -35,20 +33,13 @@ extension UIImageView {
             return
         }
         
-        print("gurd gecildi")
-        
         if let cached = ImageCache.shared.get(forkey: url.absoluteString) {
             self.image = cached
-            print("cached image")
             return
-        }
-        
-        print("cached gecildi")
-        
+        } 
+                
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-            
-            print("downloading image")
-            
+                        
             guard let data = data,
                   let image = UIImage(data: data) else { return }
                 
@@ -65,6 +56,11 @@ extension UIImageView {
         imageTask = task
         task.resume()
         
+    }
+    
+    func cancelImageLoad() {
+        imageTask?.cancel()
+        imageTask = nil
     }
     
     

@@ -22,6 +22,15 @@ final class MovieCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        titleLabel.text = nil
+        overviewLabel.text = nil
+        posterImageView.image = nil
+        posterImageView.cancelImageLoad()
+    }
+    
     private func setupUI() {
         
         posterImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -62,6 +71,8 @@ final class MovieCell: UITableViewCell {
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
         overviewLabel.text = movie.overview
+        
+        posterImageView.image = UIImage(systemName: "photo")
         posterImageView.setImage(with: movie.posterURL)
     }
     
