@@ -27,6 +27,7 @@ final class MovieListViewController: UIViewController {
     private let errorView = ErrorView()
     
     private var movies: [Movie] = []
+    private var searchWorkItem: DispatchWorkItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -163,7 +164,17 @@ extension MovieListViewController: UITableViewDelegate, UITableViewDataSource {
 extension MovieListViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.search(query: searchText)
+        
+        searchWorkItem?.cancel()
+        
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.viewModel.search(query: searchText)
+        }
+        
+        searchWorkItem = workItem
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
+        
     }
     
 }
