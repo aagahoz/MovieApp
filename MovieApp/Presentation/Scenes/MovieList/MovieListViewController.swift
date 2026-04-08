@@ -109,6 +109,7 @@ final class MovieListViewController: UIViewController {
         tableView.register(MovieCell.self, forCellReuseIdentifier: "MovieCell")
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.prefetchDataSource = self
                 
         view.addSubview(tableView)
         
@@ -156,8 +157,7 @@ final class MovieListViewController: UIViewController {
     
 }
 
-extension MovieListViewController: UITableViewDelegate, UITableViewDataSource {
-    
+extension MovieListViewController: UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         movies.count
     }
@@ -173,6 +173,21 @@ extension MovieListViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        
+        for indexPath in indexPaths {
+            let movie = movies[indexPath.row]
+            
+            guard let path = movie.posterURL else { continue }
+            
+            let fullURL = "https://image.tmdb.org/t/p/w500\(path)"
+            
+            ImagePrefetcher.shared.prefetch(urlString: fullURL)
+        }
+        
+    }
+    
 }
 
 extension MovieListViewController: UISearchBarDelegate {
