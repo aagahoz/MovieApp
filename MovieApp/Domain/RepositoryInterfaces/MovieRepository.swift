@@ -12,4 +12,7 @@ protocol MovieRepository {
     func fetchPopularMovies(page: Int,
                             completion: @escaping (Result<[Movie], NetworkError>) -> Void)
     
+    func searchMovies(query: String,
+                      page: Int,
+                      completion: @escaping (Result<[Movie], NetworkError>) -> Void)
 }

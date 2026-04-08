@@ -36,4 +36,17 @@ extension Endpoint {
         )
     }
     
+    static func searchMovies(query: String, page: Int) -> Endpoint {
+        return Endpoint(
+        
+            path: "/3/search/movie",
+            queryItems: [
+                URLQueryItem(name: "api_key", value: "3cc929e57d22016ba1d8cae8c4772481"),
+                URLQueryItem(name: "page", value: "\(page)"),
+                URLQueryItem(name: "query", value: query)
+            ]
+        
+        )
+    }
+    
 }

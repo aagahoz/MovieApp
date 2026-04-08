@@ -22,10 +22,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let apiClient = APIClient.shared
         let repository: MovieRepository = MovieRepositoryImpl(apiClient: apiClient)
         let useCase = GetPopularMoviesUseCase(repository: repository)
-        let viewModel = MovieListViewModel(getPopularMoviesUseCase: useCase)
+        let searchUseCase = SearchMoviesUseCase(repository: repository)
+        let viewModel = MovieListViewModel(getPopularMoviesUseCase: useCase, searchMoviesUseCase: searchUseCase)
         let viewController = MovieListViewController(viewModel: viewModel)
         
-        window?.rootViewController = viewController
+        let navController = UINavigationController(rootViewController: viewController)
+        
+        window?.rootViewController = navController
         window?.makeKeyAndVisible()
     }
 

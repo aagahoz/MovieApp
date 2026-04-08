@@ -20,6 +20,7 @@ final class MovieListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private let searchBar = UISearchBar()
     private let tableView = UITableView()
     private let footerSpinner = UIActivityIndicatorView(style: .medium)
     private let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -95,6 +96,9 @@ final class MovieListViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         
+        searchBar.delegate = self
+        navigationItem.titleView = searchBar
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(MovieCell.self, forCellReuseIdentifier: "MovieCell")
         tableView.dataSource = self
@@ -154,4 +158,12 @@ extension MovieListViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
+}
+
+extension MovieListViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewModel.search(query: searchText)
+    }
+    
 }

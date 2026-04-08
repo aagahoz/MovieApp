@@ -34,4 +34,19 @@ final class MovieRepositoryImpl: MovieRepository {
         
     }
     
+    func searchMovies(query: String, page: Int, completion: @escaping (Result<[Movie], NetworkError>) -> Void) {
+        
+        apiClient.request(endpoint: .searchMovies(query: query, page: page)) { ( result: Result<MovieResponse, NetworkError>) in
+            
+            switch result {
+            case .success(let response):
+                let movies = response.results.map { $0.toDomain() }
+                completion(.success(movies))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+            
+        }
+    }
+    
 }
